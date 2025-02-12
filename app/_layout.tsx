@@ -1,39 +1,62 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import React from "react";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Icon from "./src/components/CustomIcon/CustomIcon";
+import FeedScreen from "./src/screens/FeedScreen";
+import BatteryScreen from "./src/screens/BatteryScreen";
+import SettingScreen from "./src/screens/SettingScreen";
+import type { RootTabParamList } from "@/app/src/types/types";
+import { Platform } from "react-native";
+import { store } from "../store/store";
+import { Provider } from "react-redux";
+import { LightTheme, ThemeProvider } from "./src/theme/ThemeProvider";
+import { useTheme } from "react-native-paper";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+const ICON_SIZE = Platform.OS === "android" ? 20 : 24;
+const TAB_HEIGHT = 72;
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+type TabIconConfig = {
+  [key in keyof RootTabParamList]: { default: string; focused: string };
+};
+
+const tabIcons: TabIconConfig = {
+  Feed: { default: "home", focused: "home-work" },
+  Battery: { default: "battery-saver", focused: "battery-alert" },
+  Setting: { default: "settings", focused: "settings" },
+};
+
+const getTabIcon = (routeName: keyof RootTabParamList, focused: boolean) => {
+  return focused ? tabIcons[routeName].focused : tabIcons[routeName].default;
+};
+
+const Tab = createBottomTabNavigator<RootTabParamList>();
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
-
+  const theme = useTheme();
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider>
+        <Tab.Navigator
+          screenOptions={({ route }) => ({
+            headerShown: false,
+            tabBarIcon: ({ focused, color }) => (
+              <Icon
+                name={getTabIcon(route.name, focused)}
+                size={ICON_SIZE}
+                color={color}
+              />
+            ),
+            tabBarActiveTintColor: LightTheme.colors.primary,
+            tabBarInactiveTintColor: LightTheme.colors.secondary,
+            tabBarStyle: {
+              height: TAB_HEIGHT,
+            },
+          })}
+        >
+          <Tab.Screen name="Feed" component={FeedScreen} />
+          <Tab.Screen name="Battery" component={BatteryScreen} />
+          <Tab.Screen name="Setting" component={SettingScreen} />
+        </Tab.Navigator>
+      </ThemeProvider>
+    </Provider>
   );
 }
