@@ -14,11 +14,11 @@ export const feedApi = createApi({
   endpoints: (builder) => ({
     getDogImages: builder.query<FeedItem[], GetDogImagesArgs>({
       query: ({ count = 10 }) => `images/search?limit=${count}`,
-      transformResponse: (response: any[], meta, arg) => {
+      transformResponse: (response: any[], _meta, arg) => {
         try {
           return response.map((item, index) => ({
             id: `${Date.now()}-${Math.random()}`,
-            title: `Cute Dog Picture ${(arg.startIndex || 1) + index}`,
+            title: `Cute Dog Picture`,
             description: 'A lovely dog!',
             imageUrl: item.url,
           }));
