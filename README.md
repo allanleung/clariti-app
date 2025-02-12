@@ -1,50 +1,112 @@
-# Welcome to your Expo app 👋
+# Clariti Expo App 👋
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A simple Dog Feed app built using React Native with Light / Dark Mode Support that meets accessibility standards.
 
-## Get started
+---
 
-1. Install dependencies
+## Setup Instructions
 
-   ```bash
-   npm install
-   ```
+### 1. Install Dependencies
 
-2. Start the app
-
-   ```bash
-    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+Clone the repository and install the dependencies using npm:
 
 ```bash
-npm run reset-project
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 2. Start the Application
 
-## Learn more
+Run the following command to start the Expo development server:
 
-To learn more about developing your project with Expo, look at the following resources:
+```bash
+npx expo start --clear
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+In the output, you'll find options to open the app in:
 
-## Join the community
+- Development Build
+- Android Emulator
+- iOS Simulator
 
-Join our community of developers creating universal apps.
+Press 'i" to launch iOS Simulator or "a" to launch Android Simulator
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### 3. Development
+
+- Begin development by editing files inside the `app` directory. This project uses file-based routing for navigation.
+- API is store outside of `app` folder
+- Store is store outside of `app` folder
+
+---
+
+## Performance Optimization Strategies
+
+### FlatList Optimization
+
+- The app leverages React Native’s `FlatList` optimizations such as `initialNumToRender` and `removeClippedSubviews` to efficiently render large lists.
+
+### RTK Query Caching
+
+- Data fetching is optimized with Redux Toolkit’s **RTK Query**, which caches responses and minimizes redundant network requests.
+
+### Memoization
+
+- Components utilize React’s `useMemo` and `React.memo` to avoid unnecessary re-renders, ensuring smooth performance.
+
+### 60 FPS on the Feed
+
+- The Feed has been optimized to avoid uncecessary reneder and images has been cache for fastest performance.
+
+---
+
+## Future Performance Optimization Strategies
+
+### Image Caching
+
+- For image-heavy screens like the Feed, a libraries like [`react-native-fast-image`](https://github.com/DylanVann/react-native-fast-image) could improved caching and performance.
+
+### Font in Theme Provider
+
+- Currently we are using default font with different bolding, size, underline. Later in the future we can expand Font to
+
+### Feed can be further optimized
+
+- There are certin funciton can be futher optimized using `useCallBack` to avoid any unnecessary re-render.
+
+---
+
+## Assumptions and Trade-offs
+
+### Assumptions
+
+- The app assumes a stable network connection for data fetching.
+- Default theming and navigation structures will cover most use cases.
+- The app uses a free API to fetch images instead of storing assets locally.
+- Adding the bottom navigation
+
+### Trade-offs
+
+- Some performance optimizations (e.g., advanced image caching) are deferred until scaling necessitates them. Right now, RTK Query handles API caching effectively, but as the app scales, additional image optimization strategies will need to be considered.
+- Early design decisions, such as the theme layer, assume this is a single application and will not be a white-label product. As a result, the ThemeProvider currently supports only dark and light mode, without built-in support for custom branding.
+
+## Ideas for Future Improvements
+
+### Enhanced Theming
+
+- Introduce dynamic theme switching based on the OS. If user is on dark mode in the OS, the app will use CustomDarkTheme.
+
+### Accessibility
+
+- Improve **accessibility features**, such as enhanced screen reader support.
+
+### Feature Expansion
+
+- Plan for future like telemety of the user
+
+---
+
+## Learn More
+
+To dive deeper into developing with Expo, check out these resources:
+
+- **[Expo Documentation](https://docs.expo.dev/)** – Learn fundamentals or advanced topics with detailed guides.
+- **[Learn Expo Tutorial](https://docs.expo.dev/tutorial/planning/)** – A step-by-step tutorial for building projects that run on Android, iOS, and the web.
