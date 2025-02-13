@@ -2,6 +2,10 @@
 
 A simple Dog Feed app built using React Native with Light / Dark Mode Support that meets accessibility standards.
 
+| <img src="assets/demoImage/iOS-ScreenShot.png" width="300"/> | <img src="assets/demoImage/Android-ScreenShot.png" width="300"/> |
+
+| Left is iOS | Right is Android |
+
 ---
 
 ## Setup Instructions
