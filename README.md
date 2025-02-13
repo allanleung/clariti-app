@@ -36,7 +36,7 @@ Press 'i" to launch iOS Simulator or "a" to launch Android Simulator
 
 ### 3. Development
 
-- Begin development by editing files inside the `app` directory. This project uses file-based routing for navigation.
+- Begin development by editing files inside the `app` directory.
 - API is store outside of `app` folder
 - Store is store outside of `app` folder
 
