@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { useTheme } from "react-native-paper";
-import { useThemeToggle } from "../../theme/ThemeProvider";
+import { useThemeToggle } from "@/app/src/theme/ThemeProvider";
 
 const SettingScreen = () => {
   const theme = useTheme();

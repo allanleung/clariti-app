@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { View, FlatList, RefreshControl, StyleSheet, Text } from "react-native";
-import FeedCard from "../FeedCard/FeedCard";
+import FeedCard from "@/app/src/components/FeedCard/FeedCard";
 import { FeedItem } from "@/app/src/types/types";
 import { useGetDogImagesQuery, useLazyGetDogImagesQuery } from "@/services/api";
 
