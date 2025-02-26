@@ -1,77 +1,67 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { View, FlatList, RefreshControl, StyleSheet, Text } from "react-native";
 import FeedCard from "@/app/src/components/FeedCard/FeedCard";
 import { FeedItem } from "@/app/src/types/types";
-import { useGetDogImagesQuery, useLazyGetDogImagesQuery } from "@/services/api";
+import { useGetDogImagesQuery } from "@/services/api";
 
-const INITIAL_LOAD = 10;
-const LOAD_MORE_COUNT = 5;
+const PAGE_SIZE = 10;
 
 const Feed: React.FC = () => {
-  // Local state to accumulate feed items and track the next index.
-  const [items, setItems] = useState<FeedItem[]>([]);
-  const [nextIndex, setNextIndex] = useState<number>(1);
+  // Track the current page for pagination.
+  const [page, setPage] = useState(1);
+  // Accumulate items as pages are loaded.
+  const [accumulatedItems, setAccumulatedItems] = useState<FeedItem[]>([]);
 
-  // Initial fetch with RTK Query
+  // Fetch data based on the current page.
   const { data, error, isLoading, isFetching, refetch } = useGetDogImagesQuery({
-    count: INITIAL_LOAD,
-    startIndex: 1,
+    count: PAGE_SIZE,
+    page,
   });
 
-  // Lazy query for infinite scroll (load more)
-  const [triggerLoadMore, { data: moreData, isFetching: isLoadingMore }] =
-    useLazyGetDogImagesQuery();
-
-  // When the initial data is loaded, update the local state.
+  // When data arrives, either reset or append to the accumulated list.
   useEffect(() => {
-    if (data) {
-      setItems(data);
-      setNextIndex(data.length + 1);
+    if (data && data.length > 0) {
+      if (page === 1) {
+        setAccumulatedItems(data);
+      } else {
+        setAccumulatedItems((prev) => [...prev, ...data]);
+      }
     }
-  }, [data]);
+  }, [data, page]);
 
-  // When more data is fetched (infinite scroll), append it.
-  useEffect(() => {
-    if (moreData && moreData.length > 0) {
-      setItems((prev) => [...prev, ...moreData]);
-      setNextIndex((prev) => prev + moreData.length);
-    }
-  }, [moreData]);
-
-  // Trigger loading more items when the list is scrolled to the bottom.
+  // Load next page when end of list is reached.
   const handleLoadMore = useCallback(() => {
-    if (!isLoadingMore && !isLoading) {
-      triggerLoadMore({ count: LOAD_MORE_COUNT, startIndex: nextIndex });
+    // Only load more if we're not already fetching data.
+    if (!isLoading && !isFetching && data && data.length > 0) {
+      setPage((prevPage) => prevPage + 1);
     }
-  }, [isLoadingMore, isLoading, triggerLoadMore, nextIndex]);
+  }, [isLoading, isFetching, data]);
 
-  // Pull-to-refresh handler that refetches the initial data.
+  // Pull-to-refresh: reset to first page and refresh data.
   const handleRefresh = useCallback(async () => {
+    setPage(1);
     const refreshed = await refetch();
     if (refreshed?.data) {
-      setItems(refreshed.data);
-      setNextIndex(refreshed.data.length + 1);
+      setAccumulatedItems(refreshed.data);
     }
   }, [refetch]);
 
-  // Memoized render function for list items
   const renderItem = useCallback(
     ({ item }: { item: FeedItem }) => <FeedCard item={item} />,
     []
   );
 
-  // Display a simple loading/error state if needed
-  if (isLoading && items.length === 0) {
+  if (isLoading && accumulatedItems.length === 0) {
     return (
       <View style={styles.center}>
         <Text>Loading...</Text>
       </View>
     );
   }
-  if (error && items.length === 0) {
+  if (error && accumulatedItems.length === 0) {
     return (
       <View style={styles.center}>
-        <Text>Error loading dog feed. This could be API issue.</Text>
+        <Text>Error loading dog feed. This could be an API issue.</Text>
       </View>
     );
   }
@@ -79,7 +69,7 @@ const Feed: React.FC = () => {
   return (
     <View style={styles.container}>
       <FlatList
-        data={items}
+        data={accumulatedItems}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         onEndReached={handleLoadMore}
@@ -87,12 +77,13 @@ const Feed: React.FC = () => {
         refreshControl={
           <RefreshControl refreshing={isFetching} onRefresh={handleRefresh} />
         }
-        initialNumToRender={10}
-        windowSize={5} // Adjust this value based on your use-case
+        initialNumToRender={PAGE_SIZE}
+        windowSize={5} // Adjust based on your use-case.
         maxToRenderPerBatch={10} // Adjust based on your card complexity.
         removeClippedSubviews
         ListFooterComponent={
-          isLoadingMore ? (
+          // Show footer only when loading more (after the first page).
+          isFetching && page > 1 ? (
             <Text style={styles.loadingMore}>Loading more...</Text>
           ) : null
         }

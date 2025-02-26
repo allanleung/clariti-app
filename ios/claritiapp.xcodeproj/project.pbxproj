@@ -16,7 +16,6 @@
 		B6E50CE85430458993895B01 /* noop-file.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD2D42C1EEDC4C86B545BD92 /* noop-file.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
 		DB9FE535F3207EE19B2F6ABF /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = C53911CDBAEF22FEA08543DB /* PrivacyInfo.xcprivacy */; };
-		E713E12A2D599FAC0005961C /* BatteryInfoModule.m in Sources */ = {isa = PBXBuildFile; fileRef = E713E1292D599FAC0005961C /* BatteryInfoModule.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,7 +33,6 @@
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
 		C53911CDBAEF22FEA08543DB /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = claritiapp/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		DD2D42C1EEDC4C86B545BD92 /* noop-file.swift */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 4; includeInIndex = 0; lastKnownFileType = sourcecode.swift; name = "noop-file.swift"; path = "claritiapp/noop-file.swift"; sourceTree = "<group>"; };
-		E713E1292D599FAC0005961C /* BatteryInfoModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BatteryInfoModule.m; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		FAC715A2D49A985799AEE119 /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-claritiapp/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -87,7 +85,6 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				E713E1292D599FAC0005961C /* BatteryInfoModule.m */,
 				13B07FAE1A68108700A75B9A /* claritiapp */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
@@ -370,7 +367,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E713E12A2D599FAC0005961C /* BatteryInfoModule.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				B18059E884C0ABDD17F3DC3D /* ExpoModulesProvider.swift in Sources */,

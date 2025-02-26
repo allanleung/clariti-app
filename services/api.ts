@@ -3,7 +3,7 @@ import { FeedItem } from '@/app/src/types/types';
 
 interface GetDogImagesArgs {
   count?: number;
-  startIndex?: number;
+  page?: number;
 }
 
 export const feedApi = createApi({
@@ -13,24 +13,21 @@ export const feedApi = createApi({
   }),
   endpoints: (builder) => ({
     getDogImages: builder.query<FeedItem[], GetDogImagesArgs>({
-      query: ({ count = 10 }) => `images/search?limit=${count}`,
+      // Use both count and page for pagination.
+      query: ({ count = 10, page = 1 }) => `images/search?limit=${count}&page=${page}`,
       transformResponse: (response: any[], _meta, arg) => {
-        try {
-          return response.map((item, index) => ({
-            id: `${Date.now()}-${Math.random()}`,
-            title: `Cute Dog Picture`,
-            description: 'A lovely dog!',
-            imageUrl: item.url,
-          }));
-        } catch (error) {
-          console.error('Error transforming Dog API response', error);
-          throw error;
-        }
+        // If the API returns an id, use it. Otherwise, build a deterministic one using page and index.
+        return response.map((item, index) => ({
+          id: item.id || `page-${arg.page}-index-${index}`,
+          title: 'Cute Dog Picture',
+          description: 'A lovely dog!',
+          imageUrl: item.url,
+        }));
       },
-      // Cache dog images data for 60 seconds
+      // Cache the data for 60 seconds.
       keepUnusedDataFor: 60,
     }),
   }),
 });
-export {};
-export const { useGetDogImagesQuery, useLazyGetDogImagesQuery } = feedApi;
+
+export const { useGetDogImagesQuery } = feedApi;
