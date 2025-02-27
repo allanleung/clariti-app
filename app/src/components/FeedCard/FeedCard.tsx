@@ -81,7 +81,11 @@ const FeedCardComponent: React.FC<{ item: FeedItem }> = ({ item }) => {
               source={{ uri: item.imageUrl }}
               style={[
                 styles.image,
-                { width: SCREEN_WIDTH, height: IMAGE_HEIGHT },
+                {
+                  height: IMAGE_HEIGHT,
+                  width: SCREEN_WIDTH,
+                  alignSelf: "center",
+                },
               ]}
               onLoadEnd={() => setLoading(false)}
             />
@@ -147,6 +151,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     position: "relative",
+    alignItems: "center", // Center children horizontally
   },
   image: {
     resizeMode: "cover",
