@@ -8,7 +8,7 @@ import type { RootTabParamList } from "@/app/src/types/types";
 import { Platform } from "react-native";
 import { store } from "../store/store";
 import { Provider } from "react-redux";
-import { LightTheme, ThemeProvider } from "./src/theme/ThemeProvider";
+import { ThemeProvider } from "./src/theme/ThemeProvider";
 import { useTheme } from "react-native-paper";
 
 const ICON_SIZE = Platform.OS === "android" ? 20 : 24;
@@ -30,32 +30,40 @@ const getTabIcon = (routeName: keyof RootTabParamList, focused: boolean) => {
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
 
-export default function RootLayout() {
+// MainTabs is placed inside ThemeProvider so that useTheme accesses the current theme
+function MainTabs() {
   const theme = useTheme();
+  return (
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        headerShown: false,
+        tabBarIcon: ({ focused, color }) => (
+          <Icon
+            name={getTabIcon(route.name, focused)}
+            size={ICON_SIZE}
+            color={color}
+          />
+        ),
+        tabBarActiveTintColor: theme.colors.primary,
+        tabBarInactiveTintColor: theme.colors.secondary,
+        tabBarStyle: {
+          height: TAB_HEIGHT,
+          backgroundColor: theme.colors.background,
+        },
+      })}
+    >
+      <Tab.Screen name="Feed" component={FeedScreen} />
+      <Tab.Screen name="Battery" component={BatteryScreen} />
+      <Tab.Screen name="Setting" component={SettingScreen} />
+    </Tab.Navigator>
+  );
+}
+
+export default function RootLayout() {
   return (
     <Provider store={store}>
       <ThemeProvider>
-        <Tab.Navigator
-          screenOptions={({ route }) => ({
-            headerShown: false,
-            tabBarIcon: ({ focused, color }) => (
-              <Icon
-                name={getTabIcon(route.name, focused)}
-                size={ICON_SIZE}
-                color={color}
-              />
-            ),
-            tabBarActiveTintColor: LightTheme.colors.primary,
-            tabBarInactiveTintColor: LightTheme.colors.secondary,
-            tabBarStyle: {
-              height: TAB_HEIGHT,
-            },
-          })}
-        >
-          <Tab.Screen name="Feed" component={FeedScreen} />
-          <Tab.Screen name="Battery" component={BatteryScreen} />
-          <Tab.Screen name="Setting" component={SettingScreen} />
-        </Tab.Navigator>
+        <MainTabs />
       </ThemeProvider>
     </Provider>
   );

@@ -8,31 +8,38 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Card, Title, Paragraph, ActivityIndicator } from "react-native-paper";
+import {
+  Card,
+  Title,
+  Paragraph,
+  ActivityIndicator,
+  useTheme,
+} from "react-native-paper";
 import Icon from "@/app/src/components/CustomIcon/CustomIcon";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const IMAGE_HEIGHT = SCREEN_WIDTH * 0.8; // Size of image relative to width
 const COLLAPSED_HEIGHT = 100; // Height when collapsed
-const GAP_BETWEEN_IMAGE = 80; // Don't Change This
+const GAP_BETWEEN_IMAGE = 80; // Gap between image and content
 
 const FeedCardComponent: React.FC<{ item: FeedItem }> = ({ item }) => {
-  // Default card is expand
+  // Default card is expanded.
   const [expanded, setExpanded] = useState<boolean>(true);
   const [loading, setLoading] = useState<boolean>(true);
-  // Default heart is set to unlike
+  // Default heart is set to unlike.
   const [liked, setLiked] = useState<boolean>(false);
 
-  // Animated value for smooth card height expansion/collapse
-  // const animatedHeight = useRef(new Animated.Value(IMAGE_HEIGHT + GAP_BETWEEN_IMAGE)).current;
+  // Animated value for smooth card height expansion/collapse.
   const animatedHeight = useRef(
     new Animated.Value(IMAGE_HEIGHT + GAP_BETWEEN_IMAGE)
   ).current;
-
-  // Animated value for heart rotation
+  // Animated value for heart rotation.
   const rotateAnim = useRef(new Animated.Value(0)).current;
 
-  // Toggle card expansion
+  // Access dynamic theme.
+  const theme = useTheme();
+
+  // Toggle card expansion.
   const toggleExpand = () => {
     Animated.timing(animatedHeight, {
       toValue: expanded ? COLLAPSED_HEIGHT : IMAGE_HEIGHT + GAP_BETWEEN_IMAGE,
@@ -42,16 +49,16 @@ const FeedCardComponent: React.FC<{ item: FeedItem }> = ({ item }) => {
     setExpanded((prev) => !prev);
   };
 
-  // Handle heart press with a little rotation animation
+  // Handle heart press with a rotation animation.
   const onHeartPress = () => {
     Animated.sequence([
       Animated.timing(rotateAnim, {
-        toValue: 25, // Rotate to 25 degrees
+        toValue: 25, // Rotate to 25 degrees.
         duration: 150,
         useNativeDriver: true,
       }),
       Animated.timing(rotateAnim, {
-        toValue: 0, // Return to 0 degrees
+        toValue: 0, // Return to 0 degrees.
         duration: 150,
         useNativeDriver: true,
       }),
@@ -61,8 +68,13 @@ const FeedCardComponent: React.FC<{ item: FeedItem }> = ({ item }) => {
 
   return (
     <TouchableWithoutFeedback onPress={toggleExpand}>
-      <Animated.View style={[styles.card, { height: animatedHeight }]}>
-        <Card>
+      <Animated.View
+        style={[
+          styles.card,
+          { backgroundColor: theme.colors.background, height: animatedHeight },
+        ]}
+      >
+        <Card style={{ backgroundColor: theme.colors.background }}>
           {/* Image with Loading Indicator */}
           <View style={styles.imageContainer}>
             <Card.Cover
@@ -83,7 +95,7 @@ const FeedCardComponent: React.FC<{ item: FeedItem }> = ({ item }) => {
             )}
           </View>
 
-          {/* Card Content with Text on the Left and Heart Icon on the Right */}
+          {/* Card Content with Text and Heart Icon */}
           <Card.Content style={styles.content}>
             <View style={styles.row}>
               <View style={styles.textContainer}>
@@ -127,12 +139,11 @@ const styles = StyleSheet.create({
   card: {
     margin: 8,
     borderRadius: 8,
-    // backgroundColor: "#fff",
-    overflow: "hidden", // Ensures a clean layout
+    overflow: "hidden",
     shadowColor: "#000",
     shadowOpacity: 0.2,
     shadowRadius: 6,
-    elevation: 6, // Android shadow
+    elevation: 6,
   },
   imageContainer: {
     position: "relative",
@@ -159,6 +170,6 @@ const styles = StyleSheet.create({
   },
 });
 
-// Performance optimization so we make sure FeedCard prevent unnecessary re-renders when props do not change.
+// Performance optimization: prevent unnecessary re-renders when props do not change.
 const FeedCard = React.memo(FeedCardComponent);
 export default FeedCard;

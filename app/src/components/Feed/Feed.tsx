@@ -3,6 +3,7 @@ import { View, FlatList, RefreshControl, StyleSheet, Text } from "react-native";
 import FeedCard from "@/app/src/components/FeedCard/FeedCard";
 import { FeedItem } from "@/app/src/types/types";
 import { useGetDogImagesQuery } from "@/services/api";
+import { useTheme } from "react-native-paper";
 
 const PAGE_SIZE = 10;
 
@@ -18,6 +19,9 @@ const Feed: React.FC = () => {
     page,
   });
 
+  // Access dynamic theme
+  const theme = useTheme();
+
   // When data arrives, either reset or append to the accumulated list.
   useEffect(() => {
     if (data && data.length > 0) {
@@ -31,7 +35,6 @@ const Feed: React.FC = () => {
 
   // Load next page when end of list is reached.
   const handleLoadMore = useCallback(() => {
-    // Only load more if we're not already fetching data.
     if (!isLoading && !isFetching && data && data.length > 0) {
       setPage((prevPage) => prevPage + 1);
     }
@@ -53,21 +56,27 @@ const Feed: React.FC = () => {
 
   if (isLoading && accumulatedItems.length === 0) {
     return (
-      <View style={styles.center}>
+      <View
+        style={[styles.center, { backgroundColor: theme.colors.background }]}
+      >
         <Text>Loading...</Text>
       </View>
     );
   }
   if (error && accumulatedItems.length === 0) {
     return (
-      <View style={styles.center}>
+      <View
+        style={[styles.center, { backgroundColor: theme.colors.background }]}
+      >
         <Text>Error loading dog feed. This could be an API issue.</Text>
       </View>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <View
+      style={[styles.container, { backgroundColor: theme.colors.background }]}
+    >
       <FlatList
         data={accumulatedItems}
         keyExtractor={(item) => item.id}
@@ -78,11 +87,10 @@ const Feed: React.FC = () => {
           <RefreshControl refreshing={isFetching} onRefresh={handleRefresh} />
         }
         initialNumToRender={PAGE_SIZE}
-        windowSize={5} // Adjust based on your use-case.
-        maxToRenderPerBatch={10} // Adjust based on your card complexity.
+        windowSize={5}
+        maxToRenderPerBatch={10}
         removeClippedSubviews
         ListFooterComponent={
-          // Show footer only when loading more (after the first page).
           isFetching && page > 1 ? (
             <Text style={styles.loadingMore}>Loading more...</Text>
           ) : null
