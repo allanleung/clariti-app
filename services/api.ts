@@ -10,7 +10,6 @@ export const feedApi = createApi({
   reducerPath: "feedApi",
   baseQuery: fetchBaseQuery({
     baseUrl: "https://api.thedogapi.com/v1/",
-    // Optionally add headers or other fetch settings to optimize the network request.
   }),
   endpoints: (builder) => ({
     getDogImages: builder.query<FeedItem[], GetDogImagesArgs>({
@@ -18,7 +17,7 @@ export const feedApi = createApi({
         `images/search?limit=${count}&page=${page}`,
       transformResponse: (response: any[], _meta, arg) =>
         response.map((item, index) => ({
-          id: item.id || `page-${arg.page}-index-${index}`,
+          id: item.id + Math.random() || `page-${arg.page}-index-${index} + ${Math.random()}`,
           title: "Cute Dog Picture",
           description: "A lovely dog!",
           imageUrl: item.url,

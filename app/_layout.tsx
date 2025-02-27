@@ -30,7 +30,6 @@ const getTabIcon = (routeName: keyof RootTabParamList, focused: boolean) => {
 
 const Tab = createBottomTabNavigator<RootTabParamList>();
 
-// MainTabs is placed inside ThemeProvider so that useTheme accesses the current theme
 function MainTabs() {
   const theme = useTheme();
   return (
